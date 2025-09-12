@@ -3,24 +3,29 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
-# CONFIG/START DATABASE
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ecommerce.db'
+# CONFIGURAÇÃO DO BANCO DE DADOS
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///ecommerce.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False  # evita warning
 db = SQLAlchemy(app)
 
-# DATABASE MODELING
-# rows - register | columns - infos
-# Product (rows) | id, name, price, description (colums)
-class Product (db.Model):
-    id = db.Column (db.Integer, primary_key = True)
-    name = db.Column (db.String(120), nullable = False)
-    price = db.Column (db.Float, nullable = False)
-    # "Text" does not have character limitation, like the string
-    description = db.column (db.Text, nullable = True)
+# MODELAGEM DO BANCO
+# Tabela: Product
+class Product(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    # "Text" não tem limite de caracteres (diferente de String)
+    description = db.Column(db.Text, nullable=True)
 
-# ROOT - ROUTE - FUNCTION
-@app.route('/')
+    def __repr__(self):
+        return f"<Product {self.name}>"
+
+# ROTA PRINCIPAL
+@app.route("/")
 def hello_world():
-    return 'Hello World!'
+    return "Hello, World!"
 
-if __name__ == '__main__':
-    app.run(debug = True)
+if __name__ == "__main__":
+    app.run(debug=True)
+
+# PAREI EM 25 MIN
