@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -19,13 +19,37 @@ class Product(db.Model):
 
     def __repr__(self):
         return f"<Product {self.name}>"
+    
+# ROTA - ADICIONAR
+@app.route('/api/products/add', methods = ['POST'])
+def add_product():
+    data = request.json
 
-# ROTA PRINCIPAL
+    if 'name' in data and 'price':
+        product = Product (name = data['name'], price = data['price'], description = data.get('description', ''))
+        db.session.add(product)
+        db.session.commit()
+        return jsonify({'message': 'Product added successfully!'})
+    
+    return jsonify({'message': 'Invalid product data'}), 400
+
+# ROTA - DELETAR
+@app.route('/api/products/delete/<int:product_id>', methods = ['DELETE'])
+def delete_product(product_id):
+    # Recuperar produto da base de dados,
+    # Verificar se ele existe, se sim, apagar da base de dados - se não existir, retornar 404
+    product = Product.query.get(product_id)
+    if product:
+        db.session.delete(product)
+        db.session.commit()
+        return jsonify ({'message': 'Product deleted sucessfully'})
+    
+    return jsonify ({'message': 'Product not found'}), 404
+
+# ROTA/RAIZ PRINCIPAL - FUNÇÃO A SER EXECUTADA
 @app.route("/")
 def hello_world():
     return "Hello, World!"
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-# PAREI EM 25 MIN
