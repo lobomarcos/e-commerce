@@ -59,6 +59,8 @@ def logout():
     logout_user()
     return jsonify({'message': 'Logout successfully!'})
 
+# route ?
+
 # ROTA - ADICIONAR
 @app.route('/api/products/add', methods = ['POST'])
 @login_required
@@ -135,3 +137,5 @@ def hello_world():
 
 if __name__ == "__main__":
     app.run(debug=True)
+ 
+ 
